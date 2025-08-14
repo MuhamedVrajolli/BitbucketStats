@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: BitBucketStats
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: NON_NULL
+    deserialization:
+      fail-on-unknown-properties: false
+
