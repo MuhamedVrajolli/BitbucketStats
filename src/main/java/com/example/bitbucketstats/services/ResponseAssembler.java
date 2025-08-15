@@ -4,8 +4,8 @@ import static com.example.bitbucketstats.utils.GeneralUtils.avg;
 import static com.example.bitbucketstats.utils.GeneralUtils.pct;
 import static com.example.bitbucketstats.utils.GeneralUtils.period;
 import static com.example.bitbucketstats.utils.GeneralUtils.safeInt;
-import static com.example.bitbucketstats.utils.PullRequestUtils.buildPullRequestKey;
-import static com.example.bitbucketstats.utils.PullRequestUtils.buildPullRequestLink;
+import static com.example.bitbucketstats.utils.PullRequestUtils.prKey;
+import static com.example.bitbucketstats.utils.PullRequestUtils.prLink;
 
 import com.example.bitbucketstats.models.DiffDetails;
 import com.example.bitbucketstats.models.EnrichedPullRequest;
@@ -89,11 +89,11 @@ public class ResponseAssembler {
         .map(pr -> new MyPullRequestsSummary(
             pr.id(),
             pr.title(),
-            buildPullRequestLink(workspace, pr.repo(), pr.id()),
+            prLink(workspace, pr.repo(), pr.id()),
             (int) PullRequestUtils.hoursOpen(pr),
             safeInt(pr.commentCount()),
             pr.repo(),
-            includeDiffs ? diffsByKey.get(buildPullRequestKey(pr)) : null
+            includeDiffs ? diffsByKey.get(prKey(pr)) : null
         ))
         .toList();
   }

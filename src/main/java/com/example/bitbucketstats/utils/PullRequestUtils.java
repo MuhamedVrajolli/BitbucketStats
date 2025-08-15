@@ -12,11 +12,11 @@ public class PullRequestUtils {
         ? 0 : Duration.between(enrichedPullRequest.createdOn(), enrichedPullRequest.updatedOn()).toHours();
   }
 
-  public static String buildPullRequestLink(String workspace, String repo, long id) {
+  public static String prLink(String workspace, String repo, long id) {
     return String.format("https://bitbucket.org/%s/%s/pull-requests/%d", workspace, repo, id);
   }
 
-  public static String buildPullRequestKey(EnrichedPullRequest pr) {
+  public static String prKey(EnrichedPullRequest pr) {
     return pr.repo() + "#" + pr.id();
   }
 }

@@ -8,10 +8,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class GeneralUtils {
 
-  public static double round2(double v) {
-    return Math.round(v * 100.0) / 100.0;
-  }
-
   public static double avg(long sum, int count) {
     return count == 0 ? 0 : Math.round((double) sum / count);
   }

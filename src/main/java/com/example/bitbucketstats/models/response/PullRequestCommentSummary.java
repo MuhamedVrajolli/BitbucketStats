@@ -5,6 +5,7 @@ public record PullRequestCommentSummary(
     String title,
     String link,
     int commentsMade,
-    String repo) {
+    String repo
+) {
 
 }

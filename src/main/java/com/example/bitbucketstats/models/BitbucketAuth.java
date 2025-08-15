@@ -4,7 +4,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Locale;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 public record BitbucketAuth(String basicValue, String user, String appPassword) {
   public static BitbucketAuth fromHeaders(String authorization, String username, String appPassword) {
@@ -14,7 +16,8 @@ public record BitbucketAuth(String basicValue, String user, String appPassword) 
       String token = Base64.getEncoder().encodeToString((username + ":" + appPassword).getBytes(StandardCharsets.UTF_8));
       return new BitbucketAuth(token, username, appPassword);
     } else {
-      throw new IllegalArgumentException("Provide either Authorization: Basic ... or username+appPassword headers");
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+          "Provide either Authorization: Basic ... or username+appPassword headers");
     }
   }
 

@@ -1,7 +1,7 @@
 package com.example.bitbucketstats.services;
 
 import static com.example.bitbucketstats.models.FieldFilter.REVIEWERS_UUID;
-import static com.example.bitbucketstats.utils.PullRequestUtils.buildPullRequestLink;
+import static com.example.bitbucketstats.utils.PullRequestUtils.prLink;
 
 import com.example.bitbucketstats.integration.BitBucketService;
 import com.example.bitbucketstats.models.BitbucketAuth;
@@ -106,7 +106,7 @@ public class PullRequestsReviewService {
                 return new PullRequestCommentSummary(
                     pr.id(),
                     pr.title(),
-                    buildPullRequestLink(params.getWorkspace(), pr.repo(), pr.id()),
+                    prLink(params.getWorkspace(), pr.repo(), pr.id()),
                     myComments,
                     pr.repo()
                 );

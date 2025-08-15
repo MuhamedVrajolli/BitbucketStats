@@ -2,7 +2,6 @@ package com.example.bitbucketstats.configuration;
 
 import java.time.Duration;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.util.retry.Retry;
 
@@ -16,18 +15,6 @@ public class HttpRetryConfig {
       .jitter(0.2)
       .filter(HttpRetryConfig::isRetryable)
       .transientErrors(true);
-
-  /**
-   * Check if the HTTP status code is retryable.
-   * 429 Too Many Requests, 5xx Server Errors are considered retryable.
-   *
-   * @param status the HTTP status code
-   * @return true if the status is retryable, false otherwise
-   */
-  public static boolean isRetryableErrorStatus(HttpStatusCode status) {
-    int code = status.value();
-    return code == 429 || (code >= 500 && code < 600);
-  }
 
   /**
    * Check if the given exception is retryable.

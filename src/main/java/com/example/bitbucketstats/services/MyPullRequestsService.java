@@ -3,7 +3,7 @@ package com.example.bitbucketstats.services;
 import static com.example.bitbucketstats.models.FieldFilter.AUTHOR_NICKNAME;
 import static com.example.bitbucketstats.models.FieldFilter.AUTHOR_USERNAME;
 import static com.example.bitbucketstats.models.FieldFilter.AUTHOR_UUID;
-import static com.example.bitbucketstats.utils.PullRequestUtils.buildPullRequestKey;
+import static com.example.bitbucketstats.utils.PullRequestUtils.prKey;
 
 import com.example.bitbucketstats.integration.BitBucketService;
 import com.example.bitbucketstats.models.BitbucketAuth;
@@ -76,7 +76,7 @@ public class MyPullRequestsService {
     return Flux.fromIterable(prs)
         .flatMap(pr -> bitBucketService
                 .fetchDiffFilesChanged(auth, params.getWorkspace(), pr.repo(), pr.id())
-                .map(dd -> Map.entry(buildPullRequestKey(pr), dd)),
+                .map(dd -> Map.entry(prKey(pr), dd)),
             Math.max(1, params.getMaxConcurrency()))
         .collectMap(Map.Entry::getKey, Map.Entry::getValue);
   }

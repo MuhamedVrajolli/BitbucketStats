@@ -12,7 +12,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-/** Common query params shared by both endpoints. */
 @Data
 public class BaseParams {
   /** e.g. "acme" */

@@ -2,7 +2,6 @@ package com.example.bitbucketstats.integration;
 
 import static com.example.bitbucketstats.configuration.HttpRetryConfig.RETRY_POLICY;
 
-import com.example.bitbucketstats.configuration.HttpRetryConfig;
 import com.example.bitbucketstats.models.BitbucketAuth;
 import com.example.bitbucketstats.models.page.Page;
 import java.net.URI;
@@ -10,6 +9,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -65,7 +65,7 @@ public class BitbucketClient {
         .uri(URI.create(url))
         .headers(auth::apply)
         .retrieve()
-        .onStatus(HttpRetryConfig::isRetryableErrorStatus, ClientResponse::createException)
+        .onStatus(HttpStatusCode::isError, ClientResponse::createException)
         .bodyToMono(type)
         .doOnSuccess(body -> log.trace("Fetched object type={}", type.getSimpleName()))
         .doOnError(e -> log.warn("Request failed for {}", url, e))

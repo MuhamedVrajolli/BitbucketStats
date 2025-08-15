@@ -9,6 +9,7 @@ public record MyPullRequestsSummary(
     Integer timeOpenHours,
     Integer commentCount,
     String repo,
-    DiffDetails diffDetails) {
+    DiffDetails diffDetails
+) {
 
 }

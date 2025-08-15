@@ -75,7 +75,7 @@ public class BitBucketService {
     int cc = Math.max(1, params.getMaxConcurrency());
     return Flux.fromIterable(repos)
         .flatMap(repo -> searchPullRequestsByFilter(filter, repo, auth, params), cc)
-        .distinct(PullRequestUtils::buildPullRequestKey)
+        .distinct(PullRequestUtils::prKey)
         .doOnError(e -> log.warn("Error while fetching PRs", e));
   }
 
