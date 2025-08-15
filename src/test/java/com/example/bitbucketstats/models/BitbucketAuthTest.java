@@ -8,6 +8,7 @@ import java.util.Base64;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.server.ResponseStatusException;
 
 @Tag("unit")
 class BitbucketAuthTest {
@@ -40,7 +41,7 @@ class BitbucketAuthTest {
   @Test
   void fromHeaders_missingData_throws() {
     assertThatThrownBy(() -> BitbucketAuth.fromHeaders(null, null, null))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(ResponseStatusException.class)
         .hasMessageContaining("Provide either Authorization: Basic ... or username+appPassword");
   }
 }
