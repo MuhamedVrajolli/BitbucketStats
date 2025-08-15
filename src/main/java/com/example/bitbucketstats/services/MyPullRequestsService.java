@@ -15,8 +15,6 @@ import com.example.bitbucketstats.models.response.MyPullRequestsResponse;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
@@ -26,7 +24,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class MyPullRequestsService {
 
-  private static final Logger log = LoggerFactory.getLogger(MyPullRequestsService.class);
   private final BitBucketService bitBucketService;
   private final ResponseAssembler responseAssembler;
 

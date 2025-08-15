@@ -1,5 +1,6 @@
 package com.example.bitbucketstats.models;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,8 +14,8 @@ public record PullRequest(
     Integer commentCount,
     List<Participant> participants,
     String repo,
-    java.time.OffsetDateTime createdOn,
-    java.time.OffsetDateTime updatedOn
+    OffsetDateTime createdOn,
+    OffsetDateTime updatedOn
 ) {
 
   public boolean approvedBy(String myUuid) {
@@ -23,10 +24,6 @@ public record PullRequest(
     }
     return participants.stream().filter(Objects::nonNull)
         .anyMatch(p -> p.user() != null && myUuid.equals(p.user().uuid()) && Boolean.TRUE.equals(p.approved()));
-  }
-
-  public PullRequest withRepo(String repo) {
-    return new PullRequest(id, title, authorUuid, commentCount, participants, repo, createdOn, updatedOn);
   }
 
   public static PullRequest from(RawPullRequest r, String repo) {

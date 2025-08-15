@@ -14,6 +14,7 @@ import com.example.bitbucketstats.models.PullRequestPage;
 import com.example.bitbucketstats.models.User;
 import com.example.bitbucketstats.models.request.BaseParams;
 import com.example.bitbucketstats.utils.GeneralUtils;
+import com.example.bitbucketstats.utils.PullRequestUtils;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,7 +69,7 @@ public class BitBucketService {
     int cc = Math.max(1, params.getMaxConcurrency());
     return Flux.fromIterable(repos)
         .flatMap(repo -> searchPullRequestsByFilter(filter, repo, auth, params), cc)
-        .distinct(pr -> pr.repo() + "#" + pr.id())
+        .distinct(PullRequestUtils::buildPullRequestKey)
         .doOnError(e -> log.warn("Error while fetching PRs", e));
   }
 
@@ -83,14 +84,15 @@ public class BitBucketService {
    */
   public Flux<PullRequest> searchPullRequestsByFilter(
       FieldFilter fieldFilter, String repo, BitbucketAuth auth, BaseParams params) {
-
     String query = buildPullRequestsQuery(
         fieldFilter.key(), fieldFilter.value(),
         params.getSinceDate(), params.getUntilDate(),
         params.getState(), params.getQueued());
 
-    String url = buildPullRequestsUrl(params.getWorkspace(), repo, query);
+    var url = String.format("%s/repositories/%s/%s/pullrequests?q=%s&pagelen=50&fields=%s",
+        API_BASE, params.getWorkspace(), repo, urlEncode(query), PR_FIELDS);
 
+    log.info("Pull requests url: {}", url);
     log.debug("Search PRs by {}: repo={} value={} states={} queued={} since={} until={} url={}",
         fieldFilter.key(), repo, fieldFilter.value(), params.getState(), params.getQueued(),
         params.getSinceDate(), params.getUntilDate(), url);
@@ -113,7 +115,7 @@ public class BitBucketService {
   public Mono<Integer> fetchMyCommentCount(BitbucketAuth auth, String workspace, String repo, int prId, String myUuid) {
     String url = String.format("%s/repositories/%s/%s/pullrequests/%d/comments?pagelen=100",
         API_BASE, workspace, repo, prId);
-    log.trace("Fetch comments: repo={} prId={} url={}", repo, prId, url);
+    log.trace("Pull request comments url: {}", url);
 
     return bitbucketClient.fetchPaged(auth, url, CommentPage.class)
         .doOnSubscribe(s -> log.trace("Begin comments paging for {}#{}", repo, prId))
@@ -136,7 +138,7 @@ public class BitBucketService {
   public Mono<DiffDetails> fetchDiffFilesChanged(BitbucketAuth auth, String workspace, String repo, int prId) {
     String url = String.format("%s/repositories/%s/%s/pullrequests/%d/diffstat?pagelen=100",
         API_BASE, workspace, repo, prId);
-    log.trace("Fetch diffstat: repo={} prId={} url={}", repo, prId, url);
+    log.trace("Pull requests diff-stat url: {}", url);
 
     return bitbucketClient.fetchPaged(auth, url, DiffStatPage.class)
         .flatMapIterable(DiffStatPage::values)
@@ -149,17 +151,9 @@ public class BitBucketService {
             repo, prId, d.filesChanged(), d.linesAdded(), d.linesRemoved()));
   }
 
-  private static String buildPullRequestsUrl(String workspace, String repo, String query) {
-    var url = String.format("%s/repositories/%s/%s/pullrequests?q=%s&pagelen=50&fields=%s",
-        API_BASE, workspace, repo, urlEncode(query), PR_FIELDS);
-    log.info("Pull requests url: {}", url);
-    return url;
-  }
-
   private static String buildPullRequestsQuery(
       String filterField, String filterValue, LocalDate since, LocalDate until,
       @Nullable List<String> states, @Nullable Boolean queued) {
-
     StringBuilder q = new StringBuilder()
         .append(filterField).append('=').append(quote(filterValue))
         .append(" AND updated_on>=").append(quote(since.toString()))

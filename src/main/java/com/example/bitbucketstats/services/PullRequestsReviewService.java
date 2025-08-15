@@ -12,7 +12,6 @@ import com.example.bitbucketstats.models.User;
 import com.example.bitbucketstats.models.request.PullRequestReviewParams;
 import com.example.bitbucketstats.models.response.PullRequestCommentSummary;
 import com.example.bitbucketstats.models.response.PullRequestReviewResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +45,7 @@ public class PullRequestsReviewService {
 
     return resolveReviewerUuid(auth, params)
         .flatMap(reviewerUuid ->
-            bitBucketService.searchPullRequestsAcrossRepos(
-                    FieldFilter.of(REVIEWERS_UUID, reviewerUuid),
+            bitBucketService.searchPullRequestsAcrossRepos(FieldFilter.of(REVIEWERS_UUID, reviewerUuid),
                     params.getRepo(), auth, params)
                 .collectList()
                 .doOnNext(prs -> log.info("Fetched {} PRs (deduped)", prs.size()))
@@ -81,11 +79,8 @@ public class PullRequestsReviewService {
    * @param myUuid         The UUID of the authenticated user.
    * @return A Mono containing a CommentAgg with the summaries and total comment count.
    */
-  private Mono<CommentAgg> fetchMyCommentAgg(
-      List<PullRequest> allReviewedPrs,
-      PullRequestReviewParams params,
-      BitbucketAuth auth,
-      String myUuid) {
+  private Mono<CommentAgg> fetchMyCommentAgg(List<PullRequest> allReviewedPrs, PullRequestReviewParams params,
+      BitbucketAuth auth, String myUuid) {
     var needingComments = allReviewedPrs.stream()
         .filter(pr -> pr.commentCount() != null && pr.commentCount() > 0)
         .toList();
@@ -104,19 +99,20 @@ public class PullRequestsReviewService {
         .filter(e -> e.getValue() > 0)
         .collectList()
         .map(entries -> {
+          List<PullRequestCommentSummary> summaries = entries.stream()
+              .map(e -> {
+                var pr = e.getKey();
+                int myComments = e.getValue();
+                return new PullRequestCommentSummary(
+                    pr.id(),
+                    pr.title(),
+                    buildPullRequestLink(params.getWorkspace(), pr.repo(), pr.id()),
+                    myComments,
+                    pr.repo()
+                );
+              }).toList();
+
           int total = entries.stream().mapToInt(Map.Entry::getValue).sum();
-          List<PullRequestCommentSummary> summaries = new ArrayList<>();
-          for (var e : entries) {
-            var pr = e.getKey();
-            int myComments = e.getValue();
-            summaries.add(new PullRequestCommentSummary(
-                pr.id(),
-                pr.title(),
-                buildPullRequestLink(params.getWorkspace(), pr.repo(), pr.id()),
-                myComments,
-                pr.repo()
-            ));
-          }
           return new CommentAgg(summaries, total);
         });
   }
