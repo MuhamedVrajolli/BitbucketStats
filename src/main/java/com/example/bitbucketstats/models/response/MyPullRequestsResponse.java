@@ -4,10 +4,11 @@ import java.util.List;
 
 public record MyPullRequestsResponse(
     String period,
-    int totalMyPrs,
+    int totalPullRequests,
     Double avgTimeOpenHours,
     Double avgCommentCount,
-    List<MyPullRequestsSummary> myPrDetails
+    Double avgFilesChanged,
+    List<MyPullRequestsSummary> pullRequestDetails
 ) {
 
 }

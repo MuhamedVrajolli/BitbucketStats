@@ -2,6 +2,7 @@ package com.example.bitbucketstats.utils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -9,6 +10,20 @@ public class GeneralUtils {
 
   public static double round2(double v) {
     return Math.round(v * 100.0) / 100.0;
+  }
+
+  public static double avg(long sum, int count) {
+    return count == 0 ? 0 : Math.round((double) sum / count);
+  }
+
+  public static double pct(int part, int total) {
+    if (total == 0) return 0;
+    double v = (part * 100.0) / total;
+    return Math.round(v * 100.0) / 100.0; // round 2 decimals
+  }
+
+  public static String period(LocalDate since, LocalDate until) {
+    return String.format("FROM: %s TO: %s", since, until);
   }
 
   public static int safeInt(Integer v) {

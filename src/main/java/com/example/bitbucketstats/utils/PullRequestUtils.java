@@ -15,4 +15,8 @@ public class PullRequestUtils {
   public static String buildPullRequestLink(String workspace, String repo, long id) {
     return String.format("https://bitbucket.org/%s/%s/pull-requests/%d", workspace, repo, id);
   }
+
+  public static String buildPullRequestKey(PullRequest pr) {
+    return pr.repo() + "#" + pr.id();
+  }
 }

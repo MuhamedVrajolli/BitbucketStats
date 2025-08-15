@@ -1,8 +1,8 @@
 package com.example.bitbucketstats.models;
 
 import com.example.bitbucketstats.models.response.PullRequestCommentSummary;
-import java.util.Map;
+import java.util.List;
 
-public record CommentAgg(Map<String, PullRequestCommentSummary> summaries, int totalComments) {
+public record CommentAgg(List<PullRequestCommentSummary> summaries, int totalComments) {
 
 }
