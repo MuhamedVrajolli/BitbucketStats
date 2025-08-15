@@ -9,7 +9,7 @@ import com.example.bitbucketstats.integration.BitBucketService;
 import com.example.bitbucketstats.models.BitbucketAuth;
 import com.example.bitbucketstats.models.DiffDetails;
 import com.example.bitbucketstats.models.FieldFilter;
-import com.example.bitbucketstats.models.PullRequest;
+import com.example.bitbucketstats.models.EnrichedPullRequest;
 import com.example.bitbucketstats.models.request.MyPullRequestsParams;
 import com.example.bitbucketstats.models.response.MyPullRequestsResponse;
 import java.util.List;
@@ -68,7 +68,7 @@ public class MyPullRequestsService {
    * @return A Mono containing a map of pull request keyed by "repo#id" and their diff details.
    */
   private Mono<Map<String, DiffDetails>> loadDiffDetailsMap(
-      BitbucketAuth auth, List<PullRequest> prs, MyPullRequestsParams params) {
+      BitbucketAuth auth, List<EnrichedPullRequest> prs, MyPullRequestsParams params) {
     if (prs.isEmpty()) {
       return Mono.just(Map.of());
     }

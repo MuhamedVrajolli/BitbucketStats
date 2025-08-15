@@ -5,13 +5,13 @@ import static com.example.bitbucketstats.utils.GeneralUtils.quote;
 import static com.example.bitbucketstats.utils.GeneralUtils.urlEncode;
 
 import com.example.bitbucketstats.models.BitbucketAuth;
-import com.example.bitbucketstats.models.CommentPage;
+import com.example.bitbucketstats.models.page.CommentPage;
 import com.example.bitbucketstats.models.DiffDetails;
-import com.example.bitbucketstats.models.DiffStatPage;
+import com.example.bitbucketstats.models.page.DiffStatPage;
 import com.example.bitbucketstats.models.FieldFilter;
-import com.example.bitbucketstats.models.PullRequest;
-import com.example.bitbucketstats.models.PullRequestPage;
-import com.example.bitbucketstats.models.User;
+import com.example.bitbucketstats.models.EnrichedPullRequest;
+import com.example.bitbucketstats.models.page.PullRequestPage;
+import com.example.bitbucketstats.models.bitbucket.User;
 import com.example.bitbucketstats.models.request.BaseParams;
 import com.example.bitbucketstats.utils.GeneralUtils;
 import com.example.bitbucketstats.utils.PullRequestUtils;
@@ -47,6 +47,12 @@ public class BitBucketService {
 
   private final BitbucketClient bitbucketClient;
 
+  /**
+   * Fetch the current user from Bitbucket using the provided authentication details.
+   *
+   * @param auth the authentication details
+   * @return a Mono containing the User object representing the current user
+   */
   @Cacheable(cacheNames = BITBUCKET_USER_CACHE, key = "#auth.cacheKey()")
   public Mono<User> getCurrentUser(BitbucketAuth auth) {
     String url = API_BASE + "/user";
@@ -64,7 +70,7 @@ public class BitBucketService {
    * @param params additional parameters like date range and state
    * @return a Flux of PullRequest objects matching the filter across all specified repositories
    */
-  public Flux<PullRequest> searchPullRequestsAcrossRepos(
+  public Flux<EnrichedPullRequest> searchPullRequestsAcrossRepos(
       FieldFilter filter, List<String> repos, BitbucketAuth auth, BaseParams params) {
     int cc = Math.max(1, params.getMaxConcurrency());
     return Flux.fromIterable(repos)
@@ -82,7 +88,7 @@ public class BitBucketService {
    * @param params additional parameters like date range and state
    * @return a Flux of PullRequest objects matching the filter
    */
-  public Flux<PullRequest> searchPullRequestsByFilter(
+  public Flux<EnrichedPullRequest> searchPullRequestsByFilter(
       FieldFilter fieldFilter, String repo, BitbucketAuth auth, BaseParams params) {
     String query = buildPullRequestsQuery(
         fieldFilter.key(), fieldFilter.value(),
@@ -97,9 +103,8 @@ public class BitBucketService {
         fieldFilter.key(), repo, fieldFilter.value(), params.getState(), params.getQueued(),
         params.getSinceDate(), params.getUntilDate(), url);
 
-    return bitbucketClient.fetchPaged(auth, url, PullRequestPage.class)
-        .flatMapIterable(PullRequestPage::values)
-        .map(p -> PullRequest.from(p, repo));
+    return bitbucketClient.fetchAll(auth, url, PullRequestPage.class)
+        .map(p -> EnrichedPullRequest.from(p, repo));
   }
 
   /**
@@ -117,9 +122,8 @@ public class BitBucketService {
         API_BASE, workspace, repo, prId);
     log.trace("Pull request comments url: {}", url);
 
-    return bitbucketClient.fetchPaged(auth, url, CommentPage.class)
+    return bitbucketClient.fetchAll(auth, url, CommentPage.class)
         .doOnSubscribe(s -> log.trace("Begin comments paging for {}#{}", repo, prId))
-        .flatMapIterable(CommentPage::values)
         .filter(c -> c.authoredBy(myUuid) && c.isNotDeleted() && c.isPublished() && c.hasText())
         .count()
         .map(Long::intValue)
@@ -140,8 +144,7 @@ public class BitBucketService {
         API_BASE, workspace, repo, prId);
     log.trace("Pull requests diff-stat url: {}", url);
 
-    return bitbucketClient.fetchPaged(auth, url, DiffStatPage.class)
-        .flatMapIterable(DiffStatPage::values)
+    return bitbucketClient.fetchAll(auth, url, DiffStatPage.class)
         .reduce(new DiffDetails(0, 0, 0), (acc, ds) -> new DiffDetails(
             acc.filesChanged() + 1,
             acc.linesAdded() + (ds.linesAdded() == null ? 0 : ds.linesAdded()),

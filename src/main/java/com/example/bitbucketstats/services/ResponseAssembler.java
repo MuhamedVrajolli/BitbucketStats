@@ -8,7 +8,7 @@ import static com.example.bitbucketstats.utils.PullRequestUtils.buildPullRequest
 import static com.example.bitbucketstats.utils.PullRequestUtils.buildPullRequestLink;
 
 import com.example.bitbucketstats.models.DiffDetails;
-import com.example.bitbucketstats.models.PullRequest;
+import com.example.bitbucketstats.models.EnrichedPullRequest;
 import com.example.bitbucketstats.models.request.MyPullRequestsParams;
 import com.example.bitbucketstats.models.request.PullRequestReviewParams;
 import com.example.bitbucketstats.models.response.MyPullRequestsResponse;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class ResponseAssembler {
 
   public PullRequestReviewResponse toPullRequestReviewResponse(
-      List<PullRequest> prs,
+      List<EnrichedPullRequest> prs,
       PullRequestReviewParams params,
       String reviewerUuid,
       @Nullable List<PullRequestCommentSummary> commentedList,
@@ -53,7 +53,7 @@ public class ResponseAssembler {
   }
 
   public MyPullRequestsResponse toMyPullRequestsResponse(
-      List<PullRequest> prs,
+      List<EnrichedPullRequest> prs,
       MyPullRequestsParams params,
       Map<String, DiffDetails> diffsByKey // empty if not requested
   ) {
@@ -83,7 +83,7 @@ public class ResponseAssembler {
   }
 
   private List<MyPullRequestsSummary> buildMyPullRequestsSummaries(
-      List<PullRequest> prs, String workspace, boolean includeDiffs, Map<String, DiffDetails> diffsByKey) {
+      List<EnrichedPullRequest> prs, String workspace, boolean includeDiffs, Map<String, DiffDetails> diffsByKey) {
 
     return prs.stream()
         .map(pr -> new MyPullRequestsSummary(

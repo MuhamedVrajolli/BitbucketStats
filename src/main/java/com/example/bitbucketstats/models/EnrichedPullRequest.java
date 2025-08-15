@@ -1,5 +1,7 @@
 package com.example.bitbucketstats.models;
 
+import com.example.bitbucketstats.models.bitbucket.Participant;
+import com.example.bitbucketstats.models.bitbucket.PullRequest;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -7,7 +9,7 @@ import java.util.Objects;
 /**
  * Enriched PR used internally
  */
-public record PullRequest(
+public record EnrichedPullRequest(
     int id,
     String title,
     String authorUuid,
@@ -26,8 +28,8 @@ public record PullRequest(
         .anyMatch(p -> p.user() != null && myUuid.equals(p.user().uuid()) && Boolean.TRUE.equals(p.approved()));
   }
 
-  public static PullRequest from(RawPullRequest r, String repo) {
-    return new PullRequest(
+  public static EnrichedPullRequest from(PullRequest r, String repo) {
+    return new EnrichedPullRequest(
         r.id(),
         r.title(),
         r.author() == null ? null : r.author().uuid(),

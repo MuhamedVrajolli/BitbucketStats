@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.models;
+package com.example.bitbucketstats.models.bitbucket;
 
 public record Comment(
     Integer id,

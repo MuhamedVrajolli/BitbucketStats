@@ -1,9 +1,9 @@
-package com.example.bitbucketstats.models;
+package com.example.bitbucketstats.models.bitbucket;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
-public record RawPullRequest(
+public record PullRequest(
     int id,
     String title,
     Author author,

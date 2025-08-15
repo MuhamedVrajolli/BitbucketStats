@@ -7,8 +7,8 @@ import com.example.bitbucketstats.integration.BitBucketService;
 import com.example.bitbucketstats.models.BitbucketAuth;
 import com.example.bitbucketstats.models.CommentAgg;
 import com.example.bitbucketstats.models.FieldFilter;
-import com.example.bitbucketstats.models.PullRequest;
-import com.example.bitbucketstats.models.User;
+import com.example.bitbucketstats.models.EnrichedPullRequest;
+import com.example.bitbucketstats.models.bitbucket.User;
 import com.example.bitbucketstats.models.request.PullRequestReviewParams;
 import com.example.bitbucketstats.models.response.PullRequestCommentSummary;
 import com.example.bitbucketstats.models.response.PullRequestReviewResponse;
@@ -79,7 +79,7 @@ public class PullRequestsReviewService {
    * @param myUuid         The UUID of the authenticated user.
    * @return A Mono containing a CommentAgg with the summaries and total comment count.
    */
-  private Mono<CommentAgg> fetchMyCommentAgg(List<PullRequest> allReviewedPrs, PullRequestReviewParams params,
+  private Mono<CommentAgg> fetchMyCommentAgg(List<EnrichedPullRequest> allReviewedPrs, PullRequestReviewParams params,
       BitbucketAuth auth, String myUuid) {
     var needingComments = allReviewedPrs.stream()
         .filter(pr -> pr.commentCount() != null && pr.commentCount() > 0)
