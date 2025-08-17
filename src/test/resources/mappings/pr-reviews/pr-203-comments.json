@@ -1,0 +1,43 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/repositories/ws/repo-1/pullrequests/203/comments"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "pagelen": 100,
+      "values": [
+        {
+          "id": 7004,
+          "content": {
+            "raw": "Glad this fixes the NPE, LGTM.",
+            "markup": "markdown"
+          },
+          "user": {
+            "uuid": "{1a2b3c4d-0000-1111-2222-333344445555}",
+            "display_name": "John Doe"
+          },
+          "deleted": false
+        },
+        {
+          "id": 7005,
+          "content": {
+            "raw": "Add a regression test for this case?",
+            "markup": "markdown"
+          },
+          "user": {
+            "uuid": "{44444444-4444-4444-4444-444444444444}",
+            "display_name": "Dana Kim"
+          },
+          "deleted": false
+        }
+      ],
+      "page": 1,
+      "size": 2
+    }
+  }
+}

@@ -1,5 +1,7 @@
 package com.example.bitbucketstats.models.request;
 
+import static com.example.bitbucketstats.utils.GeneralUtils.addBracesToUuid;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,4 +14,8 @@ public class PullRequestReviewParams extends BaseParams {
 
   /** Include comment details in response */
   private boolean includeCommentDetails = false;
+
+  public void setReviewerUuid(String reviewerUuid) {
+    this.reviewerUuid = addBracesToUuid(reviewerUuid);
+  }
 }

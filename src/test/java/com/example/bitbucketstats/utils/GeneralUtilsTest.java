@@ -45,6 +45,18 @@ class GeneralUtilsTest {
   }
 
   @Test
+  void addBracesToUuid_addsBracesIfMissing() {
+    assertThat(GeneralUtils.addBracesToUuid("123e4567-e89b-12d3-a456-426614174000"))
+        .isEqualTo("{123e4567-e89b-12d3-a456-426614174000}");
+    assertThat(GeneralUtils.addBracesToUuid("{123e4567-e89b-12d3-a456-426614174000}"))
+        .isEqualTo("{123e4567-e89b-12d3-a456-426614174000}");
+    assertThat(GeneralUtils.addBracesToUuid("not-a-uuid")).isEqualTo("not-a-uuid");
+    assertThat(GeneralUtils.addBracesToUuid("{not-a-uuid}")).isEqualTo("{not-a-uuid}");
+    assertThat(GeneralUtils.addBracesToUuid("   ")).isEqualTo("   ");
+    assertThat(GeneralUtils.addBracesToUuid(null)).isNull();
+  }
+
+  @Test
   void urlEncode_encodesUtf8() {
     assertThat(GeneralUtils.urlEncode("a b+c"))
         .isEqualTo("a+b%2Bc"); // space -> +, plus -> %2B

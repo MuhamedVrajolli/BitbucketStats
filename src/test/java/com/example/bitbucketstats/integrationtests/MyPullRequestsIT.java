@@ -90,27 +90,5 @@ class MyPullRequestsIT extends BaseTestIT {
         .jsonPath("$.pull_request_details[2].diff_details.lines_added").isEqualTo(35)
         .jsonPath("$.pull_request_details[2].diff_details.lines_removed").isEqualTo(2);
   }
-
-  @Test
-  void test() {
-    var str = webTestClient.get()
-        .uri(b -> b.path("/pull-requests/stats")
-            .queryParam("workspace", "ws")
-            .queryParam("repo", "repo-1")
-            .queryParam("sinceDate", "2025-07-01")
-            .queryParam("untilDate", "2025-08-01")
-            .queryParam("includePullRequestDetails", true)
-            .queryParam("includeDiffDetails", true)
-            .build())
-        .header("username", "john-doe")
-        .header("appPassword", "password")
-        .exchange()
-        .expectStatus().isOk()
-        .expectHeader().contentTypeCompatibleWith(APPLICATION_JSON)
-        .expectBody(String.class)
-        .returnResult();
-
-    System.out.println("RESPONSE:\n" + str);
-  }
 }
 

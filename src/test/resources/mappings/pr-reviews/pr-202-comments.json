@@ -1,0 +1,44 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/repositories/ws/repo-1/pullrequests/202/comments"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "pagelen": 100,
+      "values": [
+        {
+          "id": 7002,
+          "content": {
+            "raw": "Will revisit the cache eviction strategy.",
+            "markup": "markdown"
+          },
+          "user": {
+            "uuid": "{1a2b3c4d-0000-1111-2222-333344445555}",
+            "display_name": "John Doe"
+          },
+          "pending": true,
+          "deleted": false
+        },
+        {
+          "id": 7003,
+          "content": {
+            "raw": "I like the config simplification.",
+            "markup": "markdown"
+          },
+          "user": {
+            "uuid": "{22222222-2222-2222-2222-222222222222}",
+            "display_name": "Bob Lee"
+          },
+          "deleted": false
+        }
+      ],
+      "page": 1,
+      "size": 2
+    }
+  }
+}

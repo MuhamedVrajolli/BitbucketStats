@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.UUID;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -29,6 +30,24 @@ public class GeneralUtils {
 
   public static String quote(String s) {
     return "\"" + s.replace("\"", "\\\"") + "\"";
+  }
+
+  public static String addBracesToUuid(String input) {
+    if (input == null || input.isBlank()) {
+      return input;
+    }
+
+    String core = input;
+    if (input.startsWith("{") && input.endsWith("}")) {
+      core = input.substring(1, input.length() - 1);
+    }
+
+    try {
+      UUID.fromString(core);
+      return "{" + core + "}";
+    } catch (IllegalArgumentException ex) {
+      return input;
+    }
   }
 
   public static String urlEncode(String s) {

@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/repositories/ws/repo-1/pullrequests/201/comments"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "pagelen": 100,
+      "values": [
+        {
+          "id": 7001,
+          "content": {
+            "raw": "Good improvement, retry looks solid.",
+            "markup": "markdown"
+          },
+          "user": {
+            "uuid": "{1a2b3c4d-0000-1111-2222-333344445555}",
+            "display_name": "John Doe"
+          },
+          "deleted": false
+        }
+      ],
+      "page": 1,
+      "size": 1
+    }
+  }
+}

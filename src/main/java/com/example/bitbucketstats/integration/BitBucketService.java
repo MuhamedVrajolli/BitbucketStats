@@ -5,13 +5,13 @@ import static com.example.bitbucketstats.utils.GeneralUtils.quote;
 import static com.example.bitbucketstats.utils.GeneralUtils.urlEncode;
 
 import com.example.bitbucketstats.models.BitbucketAuth;
-import com.example.bitbucketstats.models.page.CommentPage;
 import com.example.bitbucketstats.models.DiffDetails;
-import com.example.bitbucketstats.models.page.DiffStatPage;
-import com.example.bitbucketstats.models.FieldFilter;
 import com.example.bitbucketstats.models.EnrichedPullRequest;
-import com.example.bitbucketstats.models.page.PullRequestPage;
+import com.example.bitbucketstats.models.FieldFilter;
 import com.example.bitbucketstats.models.bitbucket.User;
+import com.example.bitbucketstats.models.page.CommentPage;
+import com.example.bitbucketstats.models.page.DiffStatPage;
+import com.example.bitbucketstats.models.page.PullRequestPage;
 import com.example.bitbucketstats.models.request.BaseParams;
 import com.example.bitbucketstats.utils.GeneralUtils;
 import com.example.bitbucketstats.utils.PullRequestUtils;
@@ -89,9 +89,7 @@ public class BitBucketService {
    */
   public Flux<EnrichedPullRequest> searchPullRequestsByFilter(
       FieldFilter fieldFilter, String repo, BitbucketAuth auth, BaseParams params) {
-    String query = buildPullRequestsQuery(
-        fieldFilter.key(), fieldFilter.value(),
-        params.getSinceDate(), params.getUntilDate(),
+    String query = buildPullRequestsQuery(fieldFilter ,params.getSinceDate(), params.getUntilDate(),
         params.getState(), params.getQueued());
 
     var url = String.format("/repositories/%s/%s/pullrequests?q=%s&pagelen=50&fields=%s",
@@ -151,11 +149,10 @@ public class BitBucketService {
             repo, prId, d.filesChanged(), d.linesAdded(), d.linesRemoved()));
   }
 
-  private static String buildPullRequestsQuery(
-      String filterField, String filterValue, LocalDate since, LocalDate until,
+  private static String buildPullRequestsQuery(FieldFilter filterField, LocalDate since, LocalDate until,
       @Nullable List<String> states, @Nullable Boolean queued) {
     StringBuilder q = new StringBuilder()
-        .append(filterField).append('=').append(quote(filterValue))
+        .append(filterField.key()).append('=').append(quote(filterField.value()))
         .append(" AND updated_on>=").append(quote(since.toString()))
         .append(" AND updated_on<=").append(quote(until.toString()));
 

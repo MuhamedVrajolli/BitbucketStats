@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/user",
+    "headers": {
+      "Authorization": {
+        "matches": "Basic am9obi1kb2U6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "uuid": "{1a2b3c4d-0000-1111-2222-333344445555}",
+      "username": "john-doe",
+      "display_name": "John Doe"
+    }
+  }
+}
