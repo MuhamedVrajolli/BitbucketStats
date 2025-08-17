@@ -1,5 +1,6 @@
 package com.example.bitbucketstats.utils;
 
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -32,5 +33,13 @@ public class GeneralUtils {
 
   public static String urlEncode(String s) {
     return URLEncoder.encode(s, StandardCharsets.UTF_8);
+  }
+
+  public static boolean isUrlAbsolute(String url) {
+    try {
+      return URI.create(url).isAbsolute();
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
   }
 }

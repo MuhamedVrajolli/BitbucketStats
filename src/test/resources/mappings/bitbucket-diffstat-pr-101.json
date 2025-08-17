@@ -1,0 +1,42 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/repositories/ws/repo-1/pullrequests/101/diffstat"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "pagelen": 100,
+      "values": [
+        {
+          "status": "modified",
+          "type": "diff",
+          "lines_added": 15,
+          "lines_removed": 3,
+          "old": {
+            "path": "src/main/java/com/acme/DiffService.java"
+          },
+          "new": {
+            "path": "src/main/java/com/acme/DiffService.java"
+          }
+        },
+        {
+          "status": "added",
+          "type": "diff",
+          "lines_added": 28,
+          "lines_removed": 0,
+          "old": {
+            "path": "src/main/java/com/acme/cache/CacheConfig.java"
+          },
+          "new": {
+            "path": "src/main/java/com/acme/cache/CacheConfig.java"
+          }
+        }
+      ],
+      "size": 2
+    }
+  }
+}

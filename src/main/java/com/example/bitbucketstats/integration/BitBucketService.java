@@ -32,7 +32,6 @@ import reactor.core.publisher.Mono;
 public class BitBucketService {
 
   private static final Logger log = LoggerFactory.getLogger(BitBucketService.class);
-  private static final String API_BASE = "https://api.bitbucket.org/2.0";
   private static final String PR_FIELDS = String.join(",",
       "next",
       "values.id",
@@ -55,7 +54,7 @@ public class BitBucketService {
    */
   @Cacheable(cacheNames = BITBUCKET_USER_CACHE, key = "#auth.cacheKey()")
   public Mono<User> getCurrentUser(BitbucketAuth auth) {
-    String url = API_BASE + "/user";
+    String url = "/user";
     log.debug("GET current user {}", url);
     return bitbucketClient.retrieveJson(auth, url, User.class)
         .doOnSuccess(u -> log.debug("Fetched current user uuid={}", u != null ? u.uuid() : "<null>"));
@@ -95,8 +94,8 @@ public class BitBucketService {
         params.getSinceDate(), params.getUntilDate(),
         params.getState(), params.getQueued());
 
-    var url = String.format("%s/repositories/%s/%s/pullrequests?q=%s&pagelen=50&fields=%s",
-        API_BASE, params.getWorkspace(), repo, urlEncode(query), PR_FIELDS);
+    var url = String.format("/repositories/%s/%s/pullrequests?q=%s&pagelen=50&fields=%s",
+        params.getWorkspace(), repo, urlEncode(query), PR_FIELDS);
 
     log.info("Pull requests url: {}", url);
     log.debug("Search PRs by {}: repo={} value={} states={} queued={} since={} until={} url={}",
@@ -118,8 +117,7 @@ public class BitBucketService {
    * @return a Mono containing the count of comments made by the user
    */
   public Mono<Integer> fetchMyCommentCount(BitbucketAuth auth, String workspace, String repo, int prId, String myUuid) {
-    String url = String.format("%s/repositories/%s/%s/pullrequests/%d/comments?pagelen=100",
-        API_BASE, workspace, repo, prId);
+    String url = String.format("/repositories/%s/%s/pullrequests/%d/comments?pagelen=100", workspace, repo, prId);
     log.trace("Pull request comments url: {}", url);
 
     return bitbucketClient.fetchAll(auth, url, CommentPage.class)
@@ -140,8 +138,7 @@ public class BitBucketService {
    * @return a Mono containing DiffDetails with files changed, lines added, and lines removed
    */
   public Mono<DiffDetails> fetchDiffFilesChanged(BitbucketAuth auth, String workspace, String repo, int prId) {
-    String url = String.format("%s/repositories/%s/%s/pullrequests/%d/diffstat?pagelen=100",
-        API_BASE, workspace, repo, prId);
+    String url = String.format("/repositories/%s/%s/pullrequests/%d/diffstat?pagelen=100", workspace, repo, prId);
     log.trace("Pull requests diff-stat url: {}", url);
 
     return bitbucketClient.fetchAll(auth, url, DiffStatPage.class)

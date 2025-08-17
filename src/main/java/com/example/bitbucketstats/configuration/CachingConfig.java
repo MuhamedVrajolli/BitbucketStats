@@ -1,10 +1,10 @@
 package com.example.bitbucketstats.configuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import java.time.Duration;
-import java.util.List;
+import com.github.benmanes.caffeine.cache.Ticker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -19,18 +19,24 @@ public class CachingConfig {
   private static final Logger log = LoggerFactory.getLogger(CachingConfig.class);
 
   @Bean
-  public CacheManager cacheManager() {
+  @ConditionalOnMissingBean(Ticker.class)
+  public Ticker caffeineTicker() {
+    return Ticker.systemTicker();
+  }
+
+  @Bean
+  public CacheManager cacheManager(Ticker ticker) {
     var caffeine = Caffeine.newBuilder()
         .maximumSize(1000)
-        .expireAfterWrite(Duration.ofMinutes(30))
-        .recordStats();
-    var cacheManager = new CaffeineCacheManager();
+        .expireAfterWrite(java.time.Duration.ofMinutes(30))
+        .recordStats()
+        .ticker(ticker);
 
-    cacheManager.setCaffeine(caffeine);
-    cacheManager.setCacheNames(List.of(BITBUCKET_USER_CACHE));
-    cacheManager.setAsyncCacheMode(true);
-
-    log.debug("Caffeine cache manager initialized (caches={})", cacheManager.getCacheNames());
-    return cacheManager;
+    var mgr = new CaffeineCacheManager();
+    mgr.setCaffeine(caffeine);
+    mgr.setCacheNames(java.util.List.of(BITBUCKET_USER_CACHE));
+    mgr.setAsyncCacheMode(true);
+    log.debug("Caffeine cache manager initialized (caches={})", mgr.getCacheNames());
+    return mgr;
   }
 }

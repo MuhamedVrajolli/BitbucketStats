@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/repositories/ws/repo-1/pullrequests/102/diffstat"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "pagelen": 100,
+      "values": [
+        {
+          "status": "modified",
+          "type": "diff",
+          "lines_added": 6,
+          "lines_removed": 10,
+          "old": {
+            "path": "src/test/java/com/acme/DiffServiceTest.java"
+          },
+          "new": {
+            "path": "src/test/java/com/acme/DiffServiceTest.java"
+          }
+        }
+      ],
+      "size": 1
+    }
+  }
+}

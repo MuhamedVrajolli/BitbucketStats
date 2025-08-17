@@ -1,0 +1,70 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/repositories/ws/repo-1/pullrequests",
+    "queryParameters": {
+      "pagelen": {
+        "matches": "\\d+"
+      },
+      "q": {
+        "contains": "author.username=\"john-doe\""
+      },
+      "fields": {
+        "matches": ".*"
+      }
+    },
+    "headers": {
+      "Authorization": {
+        "matches": "Basic am9obi1kb2U6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "pagelen": 2,
+      "values": [
+        {
+          "id": 101,
+          "comment_count": 4,
+          "title": "Fix NPE in diff aggregation",
+          "state": "MERGED",
+          "author": {
+            "uuid": "{1a2b3c4d-0000-1111-2222-333344445555}",
+            "display_name": "John Doe"
+          },
+          "created_on": "2025-07-03T09:15:12+00:00",
+          "updated_on": "2025-07-10T16:21:05+00:00",
+          "links": {
+            "self": {
+              "href": "https://bitbucket.org/ws/repo-1/pull-requests/101"
+            }
+          }
+        },
+        {
+          "id": 102,
+          "comment_count": 1,
+          "title": "Add cache layer for PR stats",
+          "state": "MERGED",
+          "author": {
+            "uuid": "{1a2b3c4d-0000-1111-2222-333344445555}",
+            "display_name": "John Doe"
+          },
+          "created_on": "2025-07-15T10:02:00+00:00",
+          "updated_on": "2025-07-16T08:45:30+00:00",
+          "links": {
+            "self": {
+              "href": "https://bitbucket.org/ws/repo-1/pull-requests/102"
+            }
+          }
+        }
+      ],
+      "page": 1,
+      "size": 3,
+      "next": "/repositories/ws/repo-1/pullrequests?pagelen=2&page=2"
+    }
+  }
+}

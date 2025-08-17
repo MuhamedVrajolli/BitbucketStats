@@ -1,0 +1,44 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/repositories/ws/repo-1/pullrequests/103/diffstat"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "pagelen": 100,
+      "values": [
+        {
+          "status": "modified",
+          "lines_added": 10,
+          "lines_removed": 2,
+          "old": {
+            "path": {
+              "toString": "src/main/java/com/example/metrics/LatencyInterceptor.java"
+            }
+          },
+          "new": {
+            "path": {
+              "toString": "src/main/java/com/example/metrics/LatencyInterceptor.java"
+            }
+          }
+        },
+        {
+          "status": "added",
+          "lines_added": 25,
+          "lines_removed": 0,
+          "old": null,
+          "new": {
+            "path": {
+              "toString": "src/test/java/com/example/metrics/LatencyInterceptorTest.java"
+            }
+          }
+        }
+      ],
+      "size": 2
+    }
+  }
+}

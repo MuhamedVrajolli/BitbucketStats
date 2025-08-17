@@ -1,0 +1,44 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/repositories/ws/repo-1/pullrequests",
+    "queryParameters": {
+      "pagelen": {
+        "matches": "\\d+"
+      },
+      "page": {
+        "equalTo": "2"
+      }
+    },
+    "headers": {
+      "Authorization": {
+        "matches": "Basic am9obi1kb2U6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "pagelen": 2,
+      "values": [
+        {
+          "id": 103,
+          "comment_count": 0,
+          "title": "Instrumentation for latency metrics",
+          "state": "MERGED",
+          "author": {
+            "uuid": "{1a2b3c4d-0000-1111-2222-333344445555}",
+            "display_name": "John Doe"
+          },
+          "created_on": "2025-07-20T13:00:00+00:00",
+          "updated_on": "2025-07-20T14:30:00+00:00"
+        }
+      ],
+      "page": 2,
+      "size": 3
+    }
+  }
+}

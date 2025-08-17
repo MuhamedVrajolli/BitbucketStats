@@ -9,6 +9,7 @@ import static org.mockito.Mockito.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.bitbucketstats.configuration.BitbucketHttpProperties;
 import com.example.bitbucketstats.models.BitbucketAuth;
 import com.example.bitbucketstats.models.bitbucket.User;
 import com.example.bitbucketstats.models.page.Page;
@@ -26,6 +27,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import reactor.util.retry.Retry;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +36,10 @@ class BitbucketClientTest {
 
   @Mock
   private WebClient webClient;
+  @Mock
+  private BitbucketHttpProperties bitbucketHttpProperties;
+  @Mock
+  private Retry retryPolicy;
 
   @InjectMocks
   private BitbucketClient client;
@@ -44,8 +50,8 @@ class BitbucketClientTest {
     var spy = Mockito.spy(client);
 
     var auth = new BitbucketAuth("abc123==", "user", "app");
-    String firstUrl = "https://api.bitbucket.org/2.0/repositories/acme/svc-a/pullrequests?page=1";
-    String nextUrl  = "https://api.bitbucket.org/2.0/repositories/acme/svc-a/pullrequests?page=2";
+    String firstUrl = "/repositories/acme/svc-a/pullrequests?page=1";
+    String nextUrl  = "/repositories/acme/svc-a/pullrequests?page=2";
 
     // Mock two pages of strings
     Page<String> page1 = mock(Page.class);
@@ -76,7 +82,7 @@ class BitbucketClientTest {
     var spy = Mockito.spy(client);
 
     var auth = new BitbucketAuth("abc123==", "user", "app");
-    String firstUrl = "https://api.bitbucket.org/2.0/something?page=1";
+    String firstUrl = "/something?page=1";
 
     Page<String> page = mock(Page.class);
     when(page.next()).thenReturn(null);
@@ -111,6 +117,8 @@ class BitbucketClientTest {
 
     var body = mock(User.class);
     when(responseSpec.bodyToMono(User.class)).thenReturn(Mono.just(body));
+    when(retryPolicy.generateCompanion(any()))
+        .thenAnswer(inv -> Retry.max(0).generateCompanion(inv.getArgument(0)));
 
     var mono = client.retrieveJson(auth, url, User.class);
 

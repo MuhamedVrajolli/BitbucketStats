@@ -1,7 +1,8 @@
 package com.example.bitbucketstats.integration;
 
-import static com.example.bitbucketstats.configuration.HttpRetryConfig.RETRY_POLICY;
+import static com.example.bitbucketstats.utils.GeneralUtils.isUrlAbsolute;
 
+import com.example.bitbucketstats.configuration.BitbucketHttpProperties;
 import com.example.bitbucketstats.models.BitbucketAuth;
 import com.example.bitbucketstats.models.page.Page;
 import java.net.URI;
@@ -9,20 +10,25 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 @Service
 @RequiredArgsConstructor
+@EnableConfigurationProperties(BitbucketHttpProperties.class)
 public class BitbucketClient {
 
   private static final Logger log = LoggerFactory.getLogger(BitbucketClient.class);
 
+  private final Retry retryPolicy;
   private final WebClient webClient;
+  private final BitbucketHttpProperties bitbucketHttpProperties;
 
   /**
    * Fetch all pages of results from a paginated Bitbucket API endpoint.
@@ -60,15 +66,16 @@ public class BitbucketClient {
    * @return a Mono that emits the fetched object
    */
   public <T> Mono<T> retrieveJson(BitbucketAuth auth, String url, Class<T> type) {
-    log.trace("HTTP GET {}", url);
+    String finalUrl = isUrlAbsolute(url) ? url : bitbucketHttpProperties.apiBase() + url;
+    log.trace("HTTP GET {}", finalUrl);
     return webClient.get()
-        .uri(URI.create(url))
+        .uri(URI.create(finalUrl))
         .headers(auth::apply)
         .retrieve()
         .onStatus(HttpStatusCode::isError, ClientResponse::createException)
         .bodyToMono(type)
         .doOnSuccess(body -> log.trace("Fetched object type={}", type.getSimpleName()))
         .doOnError(e -> log.warn("Request failed for {}", url, e))
-        .retryWhen(RETRY_POLICY);
+        .retryWhen(retryPolicy);
   }
 }
