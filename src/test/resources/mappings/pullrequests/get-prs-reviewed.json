@@ -7,7 +7,7 @@
         "matches": "\\d+"
       },
       "q": {
-        "contains": "reviewers.uuid"
+        "contains": "reviewers.uuid=\"{1a2b3c4d-0000-1111-2222-333344445555}\""
       },
       "fields": {
         "matches": ".*"

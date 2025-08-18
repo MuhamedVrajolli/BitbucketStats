@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.integrationtests;
+package com.example.bitbucketstats.itests;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -18,6 +18,7 @@ import com.example.bitbucketstats.models.bitbucket.PullRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.Fault;
 import java.util.Map;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -26,9 +27,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.test.StepVerifier;
 
+@Tag("integration")
 @Import(HttpRetryOverrideConfig.class)
 @ImportAutoConfiguration(exclude = HttpRetryConfig.class)
-class HttpRetryIT extends BaseTestIT {
+class HttpRetryIT extends BaseIT {
 
   @Autowired ObjectMapper om;
   @Autowired BitbucketClient client;
@@ -69,12 +71,13 @@ class HttpRetryIT extends BaseTestIT {
 
   @Test
   void does_not_retry_on_4xx() throws Exception {
-    stubJson(Map.of("error", "bad request"));
+    stubJson("/repositories/ws/repo-1/pullrequests/102",
+        400, Map.of("error", "bad request"));
 
     StepVerifier.create(
             client.retrieveJson(auth(), "/repositories/ws/repo-1/pullrequests/102", PullRequest.class))
         .expectErrorSatisfies(err ->
-            assertThat(err).isInstanceOf(org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest.class))
+            assertThat(err).isInstanceOf(WebClientResponseException.BadRequest.class))
         .verify();
 
     verify(1, getRequestedFor(urlPathEqualTo("/repositories/ws/repo-1/pullrequests/102")));
@@ -83,11 +86,8 @@ class HttpRetryIT extends BaseTestIT {
   @Test
   void retries_up_to_max_then_errors() throws Exception {
     // Always 502 (initial + 3 retries = 4 total)
-    stubFor(get(urlPathEqualTo("/repositories/ws/repo-1/pullrequests/103"))
-        .willReturn(aResponse()
-            .withStatus(502)
-            .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-            .withBody(om.writeValueAsString(Map.of("error", "bad gateway")))));
+    stubJson("/repositories/ws/repo-1/pullrequests/103",
+        502, Map.of("error", "bad gateway"));
 
     StepVerifier.create(
             client.retrieveJson(auth(), "/repositories/ws/repo-1/pullrequests/103", PullRequest.class))
@@ -114,10 +114,10 @@ class HttpRetryIT extends BaseTestIT {
     verify(moreThanOrExactly(2), getRequestedFor(urlPathEqualTo("/break")));
   }
 
-  private void stubJson(Object body) throws Exception {
-    stubFor(get(urlPathEqualTo("/repositories/ws/repo-1/pullrequests/102"))
+  private void stubJson(String url, int status, Object body) throws Exception {
+    stubFor(get(urlPathEqualTo(url))
         .willReturn(aResponse()
-            .withStatus(400)
+            .withStatus(status)
             .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
             .withBody(om.writeValueAsString(body))));
   }

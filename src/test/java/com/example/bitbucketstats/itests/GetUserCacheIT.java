@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.integrationtests;
+package com.example.bitbucketstats.itests;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -15,17 +15,21 @@ import com.example.bitbucketstats.models.BitbucketAuth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Ticker;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.context.annotation.Import;
 import reactor.test.StepVerifier;
 
+@Tag("integration")
 @Import(CachingOverrideConfig.class) // bring in FakeTicker + short TTL
-class GetUserCacheIT extends BaseTestIT {
+class GetUserCacheIT extends BaseIT {
 
   @Autowired ObjectMapper om;
   @Autowired BitBucketService bitBucketService;
@@ -41,7 +45,7 @@ class GetUserCacheIT extends BaseTestIT {
   void caches_on_first_subscription_then_hits_cache() throws Exception {
     stubUser("{abc}", "John");
 
-    var auth = new BitbucketAuth("Basic auth", "", "");
+    var auth = new BitbucketAuth("Basic auth", "john", "pass");
 
     // 1st call — goes to WireMock
     StepVerifier.create(bitBucketService.getCurrentUser(auth))
@@ -57,7 +61,7 @@ class GetUserCacheIT extends BaseTestIT {
     WireMock.verify(1, getRequestedFor(urlEqualTo("/user")));
 
     // Check Caffeine stats
-    var nativeCache = ((org.springframework.cache.caffeine.CaffeineCache)
+    var nativeCache = ((CaffeineCache)
         Objects.requireNonNull(cacheManager.getCache(CachingConfig.BITBUCKET_USER_CACHE)))
         .getNativeCache();
     var stats = nativeCache.stats();
@@ -71,7 +75,7 @@ class GetUserCacheIT extends BaseTestIT {
     stubUser("{xyz}", "Jane");
 
     var a1 = new BitbucketAuth("Basic cache1", "john", "pass");  // cache key #1
-    var a2 = new BitbucketAuth("BAsic cache2", "jane", "pass");  // cache key #2
+    var a2 = new BitbucketAuth("Basic cache2", "jane", "pass");  // cache key #2
 
     StepVerifier.create(bitBucketService.getCurrentUser(a1)).expectNextCount(1).verifyComplete();
     StepVerifier.create(bitBucketService.getCurrentUser(a2)).expectNextCount(1).verifyComplete();
@@ -90,7 +94,7 @@ class GetUserCacheIT extends BaseTestIT {
     WireMock.verify(1, getRequestedFor(urlEqualTo("/user")));
 
     // Advance FakeTicker past TTL (1s)
-    ((ManualTicker) ticker).advance(java.time.Duration.ofSeconds(2));
+    ((ManualTicker) ticker).advance(Duration.ofSeconds(2));
 
     // Next call should MISS and fetch again
     StepVerifier.create(bitBucketService.getCurrentUser(auth)).expectNextCount(1).verifyComplete();

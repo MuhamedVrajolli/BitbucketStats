@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.integrationtests;
+package com.example.bitbucketstats.itests;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
@@ -6,11 +6,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-class PullRequestsReviewIT extends BaseTestIT {
+@Tag("integration")
+class PullRequestsReviewIT extends BaseIT {
 
   @Autowired
   WebTestClient webTestClient;
@@ -35,7 +37,7 @@ class PullRequestsReviewIT extends BaseTestIT {
         .jsonPath("$.total_pull_requests_reviewed").isEqualTo(4)
         .jsonPath("$.approved_percentage").isEqualTo(75.0);
 
-    // Verify that the request to the user endpoint is made once to resolve my reviewer uuid
+    // Verify that the request to the user endpoint is made to resolve reviewer uuid
     verify(exactly(1), getRequestedFor(urlPathEqualTo("/user")));
   }
 

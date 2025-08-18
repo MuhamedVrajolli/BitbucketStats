@@ -25,7 +25,7 @@ public class CachingOverrideConfig {
   public CacheManager testCacheManager(ManualTicker manualTicker) {
     var caffeine = Caffeine.newBuilder()
         .maximumSize(1000)
-        .expireAfterWrite(java.time.Duration.ofSeconds(1)) // short TTL for tests
+        .expireAfterWrite(Duration.ofSeconds(1)) // short TTL for tests
         .recordStats()
         .ticker(manualTicker);
 

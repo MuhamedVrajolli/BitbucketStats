@@ -25,7 +25,6 @@ public class WebClientConfig {
 
   @Bean
   public ConnectionProvider connectionProvider() {
-    // tune as you like
     return ConnectionProvider.builder("http-pool")
         .maxConnections(200)
         .pendingAcquireMaxCount(500)

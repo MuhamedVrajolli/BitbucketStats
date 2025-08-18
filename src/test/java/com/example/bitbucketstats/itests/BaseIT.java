@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.integrationtests;
+package com.example.bitbucketstats.itests;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
-class BaseTestIT {
+abstract class BaseIT {
 
   @LocalServerPort
   int appPort;

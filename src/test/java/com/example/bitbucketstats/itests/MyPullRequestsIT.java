@@ -1,12 +1,14 @@
-package com.example.bitbucketstats.integrationtests;
+package com.example.bitbucketstats.itests;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-class MyPullRequestsIT extends BaseTestIT {
+@Tag("integration")
+class MyPullRequestsIT extends BaseIT {
 
   @Autowired
   WebTestClient webTestClient;
