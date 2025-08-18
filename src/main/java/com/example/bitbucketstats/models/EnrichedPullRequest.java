@@ -1,7 +1,7 @@
 package com.example.bitbucketstats.models;
 
-import com.example.bitbucketstats.models.bitbucket.Participant;
-import com.example.bitbucketstats.models.bitbucket.PullRequest;
+import com.example.bitbucketstats.integration.response.Participant;
+import com.example.bitbucketstats.integration.response.PullRequest;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;

@@ -7,9 +7,9 @@ import static org.mockito.Mockito.when;
 
 import com.example.bitbucketstats.models.DiffDetails;
 import com.example.bitbucketstats.models.EnrichedPullRequest;
-import com.example.bitbucketstats.models.request.MyPullRequestsParams;
-import com.example.bitbucketstats.models.request.PullRequestReviewParams;
-import com.example.bitbucketstats.models.response.PullRequestCommentSummary;
+import com.example.bitbucketstats.controllers.request.MyPullRequestsParams;
+import com.example.bitbucketstats.controllers.request.PullRequestReviewParams;
+import com.example.bitbucketstats.controllers.response.PullRequestCommentSummary;
 import com.example.bitbucketstats.utils.PullRequestUtils;
 import java.time.LocalDate;
 import java.util.List;

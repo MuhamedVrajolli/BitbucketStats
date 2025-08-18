@@ -7,8 +7,8 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.example.bitbucketstats.models.request.PullRequestReviewParams;
-import com.example.bitbucketstats.models.response.PullRequestReviewResponse;
+import com.example.bitbucketstats.controllers.request.PullRequestReviewParams;
+import com.example.bitbucketstats.controllers.response.PullRequestReviewResponse;
 import com.example.bitbucketstats.services.PullRequestsReviewService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;

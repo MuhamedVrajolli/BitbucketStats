@@ -1,8 +1,8 @@
 package com.example.bitbucketstats.controllers;
 
 import com.example.bitbucketstats.models.BitbucketAuth;
-import com.example.bitbucketstats.models.request.MyPullRequestsParams;
-import com.example.bitbucketstats.models.response.MyPullRequestsResponse;
+import com.example.bitbucketstats.controllers.request.MyPullRequestsParams;
+import com.example.bitbucketstats.controllers.response.MyPullRequestsResponse;
 import com.example.bitbucketstats.services.MyPullRequestsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

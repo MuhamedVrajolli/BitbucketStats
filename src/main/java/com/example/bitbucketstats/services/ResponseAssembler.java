@@ -9,12 +9,12 @@ import static com.example.bitbucketstats.utils.PullRequestUtils.prLink;
 
 import com.example.bitbucketstats.models.DiffDetails;
 import com.example.bitbucketstats.models.EnrichedPullRequest;
-import com.example.bitbucketstats.models.request.MyPullRequestsParams;
-import com.example.bitbucketstats.models.request.PullRequestReviewParams;
-import com.example.bitbucketstats.models.response.MyPullRequestsResponse;
-import com.example.bitbucketstats.models.response.MyPullRequestsSummary;
-import com.example.bitbucketstats.models.response.PullRequestCommentSummary;
-import com.example.bitbucketstats.models.response.PullRequestReviewResponse;
+import com.example.bitbucketstats.controllers.request.MyPullRequestsParams;
+import com.example.bitbucketstats.controllers.request.PullRequestReviewParams;
+import com.example.bitbucketstats.controllers.response.MyPullRequestsResponse;
+import com.example.bitbucketstats.controllers.response.MyPullRequestsSummary;
+import com.example.bitbucketstats.controllers.response.PullRequestCommentSummary;
+import com.example.bitbucketstats.controllers.response.PullRequestReviewResponse;
 import com.example.bitbucketstats.utils.PullRequestUtils;
 import java.util.List;
 import java.util.Map;

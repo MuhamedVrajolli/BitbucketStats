@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.models.request;
+package com.example.bitbucketstats.controllers.request;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

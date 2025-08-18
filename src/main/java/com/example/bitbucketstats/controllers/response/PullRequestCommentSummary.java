@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.models.response;
+package com.example.bitbucketstats.controllers.response;
 
 public record PullRequestCommentSummary(
     int id,

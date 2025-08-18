@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.example.bitbucketstats.models.bitbucket.Author;
-import com.example.bitbucketstats.models.bitbucket.Participant;
-import com.example.bitbucketstats.models.bitbucket.PullRequest;
-import com.example.bitbucketstats.models.bitbucket.User;
+import com.example.bitbucketstats.integration.response.Author;
+import com.example.bitbucketstats.integration.response.Participant;
+import com.example.bitbucketstats.integration.response.PullRequest;
+import com.example.bitbucketstats.integration.response.User;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Stream;

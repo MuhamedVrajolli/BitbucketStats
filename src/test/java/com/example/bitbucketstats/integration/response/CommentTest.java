@@ -1,6 +1,8 @@
-package com.example.bitbucketstats.models.bitbucket;
+package com.example.bitbucketstats.integration.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,12 +10,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 @Tag("unit")
 class CommentTest {
-
-  private static User user(String uuid) {
-    var u = org.mockito.Mockito.mock(User.class);
-    org.mockito.Mockito.when(u.uuid()).thenReturn(uuid);
-    return u;
-  }
 
   @ParameterizedTest
   @CsvSource({
@@ -61,5 +57,11 @@ class CommentTest {
     Comment.Content content = raw == null || "NULL".equals(raw) ? null : new Comment.Content(raw);
     var c = new Comment(1, null, null, null, content);
     assertThat(c.hasText()).isEqualTo(expected);
+  }
+
+  private static User user(String uuid) {
+    var u = mock(User.class);
+    when(u.uuid()).thenReturn(uuid);
+    return u;
   }
 }

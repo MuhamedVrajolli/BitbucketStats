@@ -1,3 +1,3 @@
-package com.example.bitbucketstats.models.bitbucket;
+package com.example.bitbucketstats.integration.response;
 
 public record Participant(User user, Boolean approved) {}

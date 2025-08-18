@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.models.bitbucket;
+package com.example.bitbucketstats.integration.response;
 
 import java.time.OffsetDateTime;
 import java.util.List;

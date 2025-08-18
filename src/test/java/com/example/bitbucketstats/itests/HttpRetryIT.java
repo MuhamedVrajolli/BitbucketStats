@@ -14,7 +14,7 @@ import com.example.bitbucketstats.configuration.HttpRetryConfig;
 import com.example.bitbucketstats.configuration.HttpRetryOverrideConfig;
 import com.example.bitbucketstats.integration.BitbucketClient;
 import com.example.bitbucketstats.models.BitbucketAuth;
-import com.example.bitbucketstats.models.bitbucket.PullRequest;
+import com.example.bitbucketstats.integration.response.PullRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.Fault;
 import java.util.Map;

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 import com.example.bitbucketstats.configuration.BitbucketHttpProperties;
 import com.example.bitbucketstats.models.BitbucketAuth;
-import com.example.bitbucketstats.models.bitbucket.User;
+import com.example.bitbucketstats.integration.response.User;
 import com.example.bitbucketstats.models.page.Page;
 import java.net.URI;
 import java.util.List;
