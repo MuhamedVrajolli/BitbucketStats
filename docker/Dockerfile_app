@@ -1,0 +1,28 @@
+# Stage 1: Build the application using Alpine base image
+FROM alpine:3.19 AS build
+
+# Install Java and utils
+RUN apk --no-cache add openjdk17
+RUN apk --no-cache add findutils
+
+# Set the working directory
+WORKDIR /workspace/app
+
+# Copy gradle configuration files
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+
+# Copy source code
+COPY src src
+
+# Build the application
+RUN ./gradlew clean build -x test
+
+# Stage 2: Run the application
+FROM openjdk:17
+VOLUME /tmp
+COPY --from=build /workspace/app/build/libs/BitbucketStats-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app.jar"]
