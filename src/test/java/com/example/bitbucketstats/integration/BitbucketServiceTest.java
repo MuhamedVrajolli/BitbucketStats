@@ -18,7 +18,7 @@ import com.example.bitbucketstats.integration.response.Comment;
 import com.example.bitbucketstats.integration.response.DiffStat;
 import com.example.bitbucketstats.integration.response.PullRequest;
 import com.example.bitbucketstats.integration.response.User;
-import com.example.bitbucketstats.models.page.PullRequestPage;
+import com.example.bitbucketstats.integration.response.page.PullRequestPage;
 import com.example.bitbucketstats.controllers.request.BaseParams;
 import com.example.bitbucketstats.utils.PullRequestUtils;
 import java.time.LocalDate;

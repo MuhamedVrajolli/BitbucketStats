@@ -4,7 +4,7 @@ import static com.example.bitbucketstats.utils.GeneralUtils.isUrlAbsolute;
 
 import com.example.bitbucketstats.configuration.BitbucketHttpProperties;
 import com.example.bitbucketstats.models.BitbucketAuth;
-import com.example.bitbucketstats.models.page.Page;
+import com.example.bitbucketstats.integration.response.page.Page;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
