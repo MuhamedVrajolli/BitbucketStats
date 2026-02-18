@@ -1,4 +1,4 @@
-package com.example.bitbucketstats.models.page;
+package com.example.bitbucketstats.integration.response.page;
 
 import com.example.bitbucketstats.integration.response.DiffStat;
 import java.util.List;
