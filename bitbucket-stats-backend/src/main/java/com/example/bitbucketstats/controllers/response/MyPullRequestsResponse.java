@@ -8,6 +8,8 @@ public record MyPullRequestsResponse(
     Double avgTimeOpenHours,
     Double avgCommentCount,
     Double avgFilesChanged,
+    Double avgLinesAdded,
+    Double avgLinesRemoved,
     List<MyPullRequestsSummary> pullRequestDetails
 ) {
 
