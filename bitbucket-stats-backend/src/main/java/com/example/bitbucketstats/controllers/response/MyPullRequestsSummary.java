@@ -1,6 +1,7 @@
 package com.example.bitbucketstats.controllers.response;
 
 import com.example.bitbucketstats.models.DiffDetails;
+import java.time.OffsetDateTime;
 
 public record MyPullRequestsSummary(
     int id,
@@ -9,7 +10,10 @@ public record MyPullRequestsSummary(
     Integer timeOpenHours,
     Integer commentCount,
     String repo,
-    DiffDetails diffDetails
+    DiffDetails diffDetails,
+    OffsetDateTime createdOn,
+    OffsetDateTime closedOn
 ) {
 
 }
+

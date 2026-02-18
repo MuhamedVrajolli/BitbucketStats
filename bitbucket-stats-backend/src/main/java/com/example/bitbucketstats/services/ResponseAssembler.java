@@ -63,9 +63,15 @@ public class ResponseAssembler {
     long sumComments = prs.stream().mapToLong(pr -> safeInt(pr.commentCount())).sum();
 
     Double avgFilesChanged = null;
+    Double avgLinesAdded = null;
+    Double avgLinesRemoved = null;
     if (params.isIncludeDiffDetails()) {
       int totalFilesChanged = diffsByKey.values().stream().mapToInt(DiffDetails::filesChanged).sum();
+      int totalLinesAdded = diffsByKey.values().stream().mapToInt(DiffDetails::linesAdded).sum();
+      int totalLinesRemoved = diffsByKey.values().stream().mapToInt(DiffDetails::linesRemoved).sum();
       avgFilesChanged = avg(totalFilesChanged, total);
+      avgLinesAdded = avg(totalLinesAdded, total);
+      avgLinesRemoved = avg(totalLinesRemoved, total);
     }
 
     List<MyPullRequestsSummary> details = params.isIncludePullRequestDetails()
@@ -78,6 +84,8 @@ public class ResponseAssembler {
         avg(sumHours, total),
         avg(sumComments, total),
         avgFilesChanged,
+        avgLinesAdded,
+        avgLinesRemoved,
         details
     );
   }
@@ -93,7 +101,9 @@ public class ResponseAssembler {
             (int) PullRequestUtils.hoursOpen(pr),
             safeInt(pr.commentCount()),
             pr.repo(),
-            includeDiffs ? diffsByKey.get(prKey(pr)) : null
+            includeDiffs ? diffsByKey.get(prKey(pr)) : null,
+            pr.createdOn(),
+            pr.updatedOn() // updatedOn is the close/merge time for completed PRs
         ))
         .toList();
   }
